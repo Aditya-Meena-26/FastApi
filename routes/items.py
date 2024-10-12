@@ -10,15 +10,15 @@ router = APIRouter()
 # Helper function to convert `date` to `datetime`
 def convert_date_to_datetime(data: dict):
     for key, value in data.items():
-        if isinstance(value, date):  # Check if the value is a `date`
-            data[key] = datetime.combine(value, datetime.min.time())  # Convert to `datetime`
+        if isinstance(value, date): 
+            data[key] = datetime.combine(value, datetime.min.time()) 
     return data
 
 # POST /items - Create new item
 @router.post("/items", status_code=status.HTTP_201_CREATED)
 async def create_item(item: ItemCreate):
     item_data = item.dict()
-    item_data['insert_date'] = datetime.utcnow()  # Automatically insert date
+    item_data['insert_date'] = datetime.utcnow()  
 
     # Convert any `date` fields to `datetime`
     item_data = convert_date_to_datetime(item_data)

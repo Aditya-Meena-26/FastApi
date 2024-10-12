@@ -10,8 +10,8 @@ router = APIRouter()
 # Helper function to convert `date` to `datetime`
 def convert_date_to_datetime(data: dict):
     for key, value in data.items():
-        if isinstance(value, date):  # Check if the value is a `date`
-            data[key] = datetime.combine(value, datetime.min.time())  # Convert to `datetime`
+        if isinstance(value, date):  
+            data[key] = datetime.combine(value, datetime.min.time()) 
     return data
 
 # POST /clock-in - Create clock-in record
@@ -20,7 +20,6 @@ async def create_clock_in(record: ClockInCreate):
     record_data = record.dict()
     record_data['insert_datetime'] = datetime.utcnow()
 
-    # Convert any `date` fields to `datetime`
     record_data = convert_date_to_datetime(record_data)
 
     result = await clock_in_collection.insert_one(record_data)
@@ -54,7 +53,6 @@ async def delete_clock_in(id: str):
 async def update_clock_in(id: str, record: ClockInUpdate):
     record_data = {k: v for k, v in record.dict().items() if v is not None}
 
-    # Convert any `date` fields to `datetime`
     record_data = convert_date_to_datetime(record_data)
 
     result = await clock_in_collection.update_one({"_id": ObjectId(id)}, {"$set": record_data})
